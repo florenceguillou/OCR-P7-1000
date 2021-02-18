@@ -1,1 +1,1 @@
-web: gunicorn bapp:app
+web: gunicorn bapp:server
