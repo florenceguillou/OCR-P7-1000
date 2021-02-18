@@ -20,9 +20,11 @@ external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 #loading data
 #########################
 #path_general = '/Users/guillou/Documents/FLORENCE/FORMATION/FORMATIONS/OPEN-CLASSROOMS-DATA-SCIENTIST/7-IMPLEMENTATION_MODELE_SCORING/NOTEBOOK_JUPYTER/ressources_dash/'
-path_general = '/'
-path_reference = path_general + "valeurs_references_code.csv"
-path_predInfo = path_general + "pred_infos_1000.csv"
+#path_general = '/'
+#path_reference = path_general + "valeurs_references_code.csv"
+path_reference = "valeurs_references_code.csv"
+#path_predInfo = path_general + "pred_infos_1000.csv"
+path_predInfo = "pred_infos_1000.csv"
 
 #mean values for all clients, defaut and non default clients, similar clients
 reference3 = pd.read_csv(path_reference, index_col=0)
