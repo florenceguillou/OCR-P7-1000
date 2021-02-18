@@ -4,6 +4,7 @@ import dash_html_components as html
 from dash.dependencies import Input, Output, State
 import dash_bootstrap_components as dbc
 import dash_table
+import flask
 
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
@@ -255,7 +256,10 @@ fig7.update_layout( margin=dict(l=0, r=0, t=5, b=5))
 #########################
 #initialize app
 #########################
-app = dash.Dash(__name__, external_stylesheets= external_stylesheets)
+#app = dash.Dash(__name__, external_stylesheets= external_stylesheets)
+
+server = flask.Flask(__name__)
+app = dash.Dash(external_stylesheets=external_stylesheets, server=server)
 
 
 app.layout = html.Div([
