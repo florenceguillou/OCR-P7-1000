@@ -15,16 +15,11 @@ import numpy as np
 
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-##external_stylesheets_2 = [dbc.themes.BOOTSTRAP]
 
 #########################
 #loading data
 #########################
-#path_general = '/Users/guillou/Documents/FLORENCE/FORMATION/FORMATIONS/OPEN-CLASSROOMS-DATA-SCIENTIST/7-IMPLEMENTATION_MODELE_SCORING/NOTEBOOK_JUPYTER/ressources_dash/'
-#path_general = '/'
-#path_reference = path_general + "valeurs_references_code.csv"
 path_reference = "valeurs_references_code.csv"
-#path_predInfo = path_general + "pred_infos_1000.csv"
 path_predInfo = "pred_infos_1000.csv"
 
 #mean values for all clients, defaut and non default clients, similar clients
@@ -32,29 +27,20 @@ reference3 = pd.read_csv(path_reference, index_col=0)
 #general informations, probabilities and predictions
 predInfo = pd.read_csv(path_predInfo, index_col = 0)
 
+#lists
 list_infoCredit = ['SK_ID_CURR','AMT_CREDIT','AMT_ANNUITY','CREDIT_DURATION','AMT_INCOME_TOTAL','DEBT_RATIO']
 list_label_infoCredit = ['ID','MONTANT DU CREDIT','ANNUITES','DUREE DU CREDIT','REVENUS ANNUELS', "TAUX D'ENDETTEMENT"]
+
 #selection de données pour table
 predInfoCredit = predInfo[list_infoCredit][0:10]
 predInfoCredit.rename(columns={'SK_ID_CURR': "ID", 'AMT_CREDIT': "MONTANT DU CREDIT", 'AMT_ANNUITY': "ANNUITES",
                              'CREDIT_DURATION':"DUREE DU CREDIT", 'AMT_INCOME_TOTAL':"REVENUS ANNUELS", 'DEBT_RATIO':"TAUX D'ENDETTEMENT"}, inplace= True)
 
-#########################
-#valeurs test
-#########################
-
-#valeur test pour table
-#y = predInfoCredit[predInfoCredit['ID'] == 100002].to_dict('records')
-
-#valeurs test pour Gauge
-#x = round(predInfo['proba'][predInfo['SK_ID_CURR'] == 100008].values[0], 2)
-
-
 ###########################
 #functions
 ###########################
 
-#fonction pour tracer les barplots de caractéristiques générales et clients similaires
+#function to plot barplots of general characteristics and similar customers
 predInfo['code'] = predInfo['DAYS_BIRTHcategories'].astype(str) + predInfo['AMT_INCOME_TOTALcategories'].astype(str) + predInfo['DAYS_EMPLOYEDcategories'].astype(str)
 
 def trace_bar_ligne(code):    
@@ -85,13 +71,10 @@ def trace_bar_ligne(code):
                      marker_color = '#B82E2E',
                     name = 'PROPRIETE'),
               row=1, col=5)
-  #fig3.add_trace(go.Bar(y= reference3['TARGET'][['mean_total', str(simil)]],
-  #                 x=['moyen', str(simil)],
-  #                 marker_color = '#8C564B',
-  #                name = 'TARGET'),
   fig3.update_layout( margin=dict(l=5, r=5, t=5, b=100))
   return fig3
 
+# function to plot and color gauge
 def gauge_indicators(ID):
   fig5 = go.Figure()
 
@@ -175,7 +158,6 @@ def gauge_indicators(ID):
         'steps': [
             {'range': [0, round(predInfo['EXT_SOURCE_1'].mean(), 2)], 'color': "lightgray"},
             {'range': [round(predInfo['EXT_SOURCE_1'].mean(), 2), 1], 'color': "gray"}]}))
-  #fig5.update_layout(height = 300 , margin = {'t':0, 'b':0, 'l':0})
 
   fig5.update_layout(
     #autosize=False,
@@ -256,8 +238,6 @@ fig7.update_layout( margin=dict(l=0, r=0, t=5, b=5))
 #########################
 #initialize app
 #########################
-#app = dash.Dash(__name__, external_stylesheets= external_stylesheets)
-
 server = flask.Flask(__name__)
 app = dash.Dash(external_stylesheets=external_stylesheets, server=server)
 
@@ -277,16 +257,14 @@ app.layout = html.Div([
                 style={'textAlign': 'left'}),
         dcc.Input(id='input-1-state', type='text', value=100003, style={'width' : '220px'}),
 
-        dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', style={'width' : '220px'})#,   
+        dbc.Button(id='submit-button-state', n_clicks=0, children='Submit', style={'width' : '220px'})   
 
-        #html.Div(id='output-state', style={'textAlign': 'left'})
       ], className = 'row'),
 #######################################
 #§zone de saisie et affichage du risque
 #######################################
     #row3
     html.Div([      
- #     html.Div([
         #left col
         html.Div([
     ########################################   
@@ -398,7 +376,7 @@ app.layout = html.Div([
           ], className = 'three columns'),
         #right col
         html.Div([
-          #
+          
           ], className = 'four columns')
     ], className = 'row'),
 
@@ -432,17 +410,6 @@ app.layout = html.Div([
 ################################
 #callbacks
 ################################
-
-#@app.callback(Output('output-state', 'children'),
-#              Input('submit-button-state', 'n_clicks'),
-#              State('input-1-state', 'value'))
-#def update_output(n_clicks, input1):
-    #y = round(predInfo['proba'][predInfo['SK_ID_CURR'] == input1].values[0], 2)
-#    y = round(predInfo[predInfo['SK_ID_CURR'] == int(input1)]['proba'].values[0], 2)
-#    return u'''
-#        Risque de défaut de paiement estimé à {}.
-#    '''.format(y)
-
 
 @app.callback(Output('gauge_chart2', 'figure'),
               Input('submit-button-state', 'n_clicks'),
